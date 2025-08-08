@@ -1,211 +1,224 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tabla de Posiciones - Copa Tintal 2025</title>
-  <style>
-    body {
-      margin: 0;
-      background: linear-gradient(135deg, #000000, #FFD700);
-      font-family: 'Segoe UI', sans-serif;
-      color: white;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      font-size: 3rem;
-      color: #FFD700;
-      text-shadow: 2px 2px #000;
-    }
-    .admin-section {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .table-container {
-      overflow-x: auto;
-      background-color: #111;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-      animation: fadeIn 1s ease-in;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: #222;
-    }
-    th, td {
-      border: 1px solid #FFD700;
-      padding: 12px;
-      text-align: center;
-      font-size: 1rem;
-    }
-    th {
-      background-color: #FFD700;
-      color: #000;
-      font-size: 1.1rem;
-    }
-    td input {
-      background: transparent;
-      border: none;
-      color: white;
-      text-align: center;
-      font-size: 1rem;
-      width: 100%;
-    }
-    td input:disabled {
-      color: white;
-    }
-    .save-btn {
-      background: #FFD700;
-      color: #000;
-      border: none;
-      padding: 12px 24px;
-      font-size: 1rem;
-      margin-top: 20px;
-      cursor: pointer;
-      border-radius: 10px;
-      transition: background 0.3s ease;
-    }
-    .save-btn:hover {
-      background: #ffaa00;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Copa Tintal 2025 - Tabla de Posiciones por Club</title>
+<style>
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #000000, #FFD700);
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #FFD700;
+    text-shadow: 2px 2px #000;
+  }
+  .admin-section {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .table-container {
+    overflow-x: auto;
+    background-color: #111;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #222;
+  }
+  th, td {
+    border: 1px solid #FFD700;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background-color: #FFD700;
+    color: #000;
+  }
+  td input {
+    background: transparent;
+    border: none;
+    color: white;
+    text-align: center;
+    width: 100%;
+  }
+  td input:disabled {
+    color: white;
+  }
+  .save-btn {
+    background: #FFD700;
+    color: #000;
+    border: none;
+    padding: 8px 14px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .save-btn:hover {
+    background: #ffaa00;
+  }
+  tfoot td {
+    font-weight: bold;
+    background: #333;
+  }
+</style>
 </head>
 <body>
-  <h1>Copa Tintal 2025 - Tabla de Posiciones por Club</h1>
-  <div class="admin-section">
-    <input type="password" id="adminPass" placeholder="Contraseña de edición">
-    <button class="save-btn" id="btnEditar">Activar edición</button>
-    <button class="save-btn" id="btnGuardar">Guardar cambios</button>
-    <button class="save-btn" id="btnExportar">Exportar a Excel</button>
-  </div>
-  <div class="table-container">
-    <table id="tablaClubes">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Club</th>
-          <th>🥇 Oro</th>
-          <th>🥈 Plata</th>
-          <th>🥉 Bronce</th>
-          <th>🏆 Total</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+<h1>Copa Tintal 2025 - Tabla de Posiciones por Club</h1>
 
-  <!-- Librería para exportar a Excel -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<div class="admin-section">
+  <input type="password" id="adminPass" placeholder="Contraseña de edición">
+  <button class="save-btn" onclick="enableEditing()">Activar edición</button>
+  <button class="save-btn" onclick="guardarDatos()">Guardar cambios</button>
+  <button class="save-btn" onclick="exportarExcel()">Exportar a Excel</button>
+  <button class="save-btn" onclick="descargarHTML()">Descargar HTML con cambios</button>
+</div>
 
-  <script>
-    const PASSWORD = "copatintal2025";
-    let modoEdicion = false;
+<div class="table-container">
+  <table id="tablaClubes">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Club</th>
+        <th>🥇 Oro</th>
+        <th>🥈 Plata</th>
+        <th>🥉 Bronce</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2">TOTAL GENERAL</td>
+        <td id="totalOro">0</td>
+        <td id="totalPlata">0</td>
+        <td id="totalBronce">0</td>
+        <td id="totalGeneral">0</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
 
-    let clubes = JSON.parse(localStorage.getItem("clubes")) || [
-      { nombre: "ALEMAN", oro: 1, plata: 1, bronce: 1 },
-      { nombre: "ARZARIOZ", oro: 1, plata: 1, bronce: 0 },
-      { nombre: "BEGINNERS JOSEP", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "COLOSAL", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "COLSUBSIDIO", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "DINAMIC", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "ECO-PATIN", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "EN LA LÍNEA PEDAGÓGICOS", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "FAST KIDS", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "FLY KIDS", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "FORZA", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "FOUR WHEELS", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "FUTDEPORT", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "LAPONTE", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "LIBERTAD", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "LJM SKATE", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "MERLIN ROLLERS", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "PATIN LATINO", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "RECREAR EN LINEA", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "SOBRE RUEDAS TINTAL", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "SPEED RIEDER", oro: 0, plata: 0, bronce: 0 },
-      { nombre: "SPORTING CAPITAL", oro: 0, plata: 0, bronce: 0 }
-    ];
+<script>
+// Lista de clubes ordenados alfabéticamente y en mayúsculas
+const clubes = [
+  "ALEMAN",
+  "ARZARIOZ",
+  "BEGGINERS JOSEP",
+  "COLOSAL",
+  "COLSUBSIDIO",
+  "DINAMIC",
+  "ECO-PATIN",
+  "EN LA LÍNEA PEDAGÓGICOS",
+  "FAST KIDS",
+  "FLY KIDS",
+  "FORZA",
+  "FOUR WHEELS",
+  "FUTDEPORT",
+  "LAPONTE",
+  "LIBERTAD",
+  "LJM SKATE",
+  "MERLIN ROLLERS",
+  "PATIN LATINO",
+  "RECREAR EN LINEA",
+  "SOBRE RUEDAS TINTAL",
+  "SPEED RIEDER",
+  "SPORTING CAPITAL"
+];
 
-    clubes.sort((a, b) => a.nombre.localeCompare(b.nombre));
+// Cargar tabla
+function cargarTabla() {
+  const tbody = document.querySelector("#tablaClubes tbody");
+  tbody.innerHTML = "";
+  let datos = JSON.parse(localStorage.getItem("tablaClubes")) || [];
+  if (datos.length === 0) {
+    datos = clubes.map((club, i) => ({id: i+1, nombre: club, oro: 0, plata: 0, bronce: 0}));
+  }
+  datos.forEach((club, index) => {
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td>${index+1}</td>
+      <td>${club.nombre}</td>
+      <td><input type="number" value="${club.oro}" disabled></td>
+      <td><input type="number" value="${club.plata}" disabled></td>
+      <td><input type="number" value="${club.bronce}" disabled></td>
+      <td>${club.oro + club.plata + club.bronce}</td>
+    `;
+    tbody.appendChild(fila);
+  });
+  actualizarTotales();
+}
 
-    function cargarTabla() {
-      const tbody = document.querySelector("#tablaClubes tbody");
-      tbody.innerHTML = "";
-      clubes.forEach((club, index) => {
-        const total = club.oro + club.plata + club.bronce;
-        const fila = document.createElement("tr");
-        fila.innerHTML = `
-          <td>${index + 1}</td>
-          <td><input type="text" value="${club.nombre}" disabled></td>
-          <td><input type="number" value="${club.oro}" min="0" disabled></td>
-          <td><input type="number" value="${club.plata}" min="0" disabled></td>
-          <td><input type="number" value="${club.bronce}" min="0" disabled></td>
-          <td>${total}</td>
-        `;
-        tbody.appendChild(fila);
-      });
-    }
+// Activar edición
+function enableEditing() {
+  const pass = document.getElementById("adminPass").value;
+  if (pass === "admin123") {
+    document.querySelectorAll("#tablaClubes tbody input").forEach(inp => inp.disabled = false);
+    alert("Edición activada");
+  } else {
+    alert("Contraseña incorrecta");
+  }
+}
 
-    function enableEditing() {
-      const pass = document.getElementById("adminPass").value;
-      if (pass === PASSWORD) {
-        modoEdicion = true;
-        document.querySelectorAll("td input").forEach(inp => inp.disabled = false);
-        alert("Edición activada");
-      } else {
-        alert("Contraseña incorrecta");
-      }
-    }
+// Guardar cambios
+function guardarDatos() {
+  const filas = document.querySelectorAll("#tablaClubes tbody tr");
+  let datos = [];
+  filas.forEach(fila => {
+    const nombre = fila.children[1].textContent;
+    const oro = parseInt(fila.children[2].querySelector("input").value) || 0;
+    const plata = parseInt(fila.children[3].querySelector("input").value) || 0;
+    const bronce = parseInt(fila.children[4].querySelector("input").value) || 0;
+    datos.push({nombre, oro, plata, bronce});
+  });
+  localStorage.setItem("tablaClubes", JSON.stringify(datos));
+  cargarTabla();
+  alert("Datos guardados");
+}
 
-    function guardarDatos() {
-      if (!modoEdicion) {
-        alert("Debes activar la edición primero");
-        return;
-      }
-      const filas = document.querySelectorAll("#tablaClubes tbody tr");
-      clubes = [];
-      filas.forEach(fila => {
-        const celdas = fila.querySelectorAll("td input");
-        clubes.push({
-          nombre: celdas[0].value.toUpperCase(),
-          oro: parseInt(celdas[1].value) || 0,
-          plata: parseInt(celdas[2].value) || 0,
-          bronce: parseInt(celdas[3].value) || 0
-        });
-      });
-      clubes.sort((a, b) => a.nombre.localeCompare(b.nombre));
-      localStorage.setItem("clubes", JSON.stringify(clubes));
-      alert("Cambios guardados");
-      cargarTabla();
-    }
+// Totales
+function actualizarTotales() {
+  let totalOro = 0, totalPlata = 0, totalBronce = 0;
+  document.querySelectorAll("#tablaClubes tbody tr").forEach(fila => {
+    totalOro += parseInt(fila.children[2].querySelector("input").value) || 0;
+    totalPlata += parseInt(fila.children[3].querySelector("input").value) || 0;
+    totalBronce += parseInt(fila.children[4].querySelector("input").value) || 0;
+  });
+  document.getElementById("totalOro").textContent = totalOro;
+  document.getElementById("totalPlata").textContent = totalPlata;
+  document.getElementById("totalBronce").textContent = totalBronce;
+  document.getElementById("totalGeneral").textContent = totalOro + totalPlata + totalBronce;
+}
 
-    function exportarExcel() {
-      const datos = clubes.map((club, index) => ({
-        "#": index + 1,
-        "Club": club.nombre,
-        "Oro": club.oro,
-        "Plata": club.plata,
-        "Bronce": club.bronce,
-        "Total": club.oro + club.plata + club.bronce
-      }));
-      const hoja = XLSX.utils.json_to_sheet(datos);
-      const libro = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(libro, hoja, "Tabla de Posiciones");
-      XLSX.writeFile(libro, "Copa_Tintal_2025.xlsx");
-    }
+// Exportar Excel
+function exportarExcel() {
+  let tabla = document.getElementById("tablaClubes").outerHTML;
+  let blob = new Blob([tabla], {type: "application/vnd.ms-excel"});
+  let link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "tabla_copa_tintal_2025.xls";
+  link.click();
+}
 
-    document.getElementById("btnEditar").addEventListener("click", enableEditing);
-    document.getElementById("btnGuardar").addEventListener("click", guardarDatos);
-    document.getElementById("btnExportar").addEventListener("click", exportarExcel);
+// Descargar HTML actualizado
+function descargarHTML() {
+  let contenido = document.documentElement.outerHTML;
+  let blob = new Blob([contenido], {type: "text/html"});
+  let link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "index.html";
+  link.click();
+}
 
-    cargarTabla();
-  </script>
+cargarTabla();
+</script>
 </body>
 </html>
